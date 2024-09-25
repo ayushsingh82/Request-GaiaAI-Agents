@@ -8,6 +8,7 @@ import Home from './components/Home.jsx'
 import Navbar from './components/Navbar.jsx'
 import Form from './components/Form.jsx'
 import ListedBounties from './components/ListedBounties.jsx'
+import {NextUIProvider} from '@nextui-org/react'
 
 import '@rainbow-me/rainbowkit/styles.css';
 
@@ -48,6 +49,7 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+  <NextUIProvider>
   <WagmiProvider config={config}>
   <QueryClientProvider client={queryClient}>
     <RainbowKitProvider>
@@ -56,5 +58,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </RainbowKitProvider>
   </QueryClientProvider>
   </WagmiProvider>
+  </NextUIProvider>
   </React.StrictMode>,
 )

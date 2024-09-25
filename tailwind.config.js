@@ -2,16 +2,19 @@ const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
+const { nextui } = require("@nextui-org/react")
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@nextui-org/theme/dist/components/(card|ripple).js"
   ],
   theme: {
     extend: {},
   },
-  plugins: [addVariablesForColors],
+  plugins: [addVariablesForColors, nextui()],
 }
 
 function addVariablesForColors({ addBase, theme }) {
