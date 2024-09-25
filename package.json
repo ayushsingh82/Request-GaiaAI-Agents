@@ -18,7 +18,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",
     "tailwind-merge": "^2.3.0",
-    "viem": "^2.16.2",
+    "viem": "^2.21.14",
     "wagmi": "^2.10.7"
   },
   "devDependencies": {
