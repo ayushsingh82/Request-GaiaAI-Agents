@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { publicClient, walletClient } from '../config';
 import { wagmiAbi } from '../abi';
+import { useAccount } from 'wagmi'
 
 const Form = () => {
   // State to handle form inputs
@@ -10,6 +11,8 @@ const Form = () => {
     aiAgent: '',
     bountyPrize: ''
   });
+
+  const {address} = useAccount()
 
   // State to handle loading and error messages
   const [loading, setLoading] = useState(false);
@@ -37,12 +40,15 @@ const Form = () => {
       const { name, contact, aiAgent, bountyPrize } = formData;
 
       // Simulate the contract call to submit the form
+
+
+      
       const { request } = await publicClient.simulateContract({
         address: '0x78217d908BD4deD90CE2aE0Bf986447BDFd21B76',
         abi: wagmiAbi,
         functionName: 'submitForm',
         args: [name, contact, aiAgent, bountyPrize],
-        account:'0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266'
+        account:address
       });
 
       // Write to the contract (submit form on-chain)

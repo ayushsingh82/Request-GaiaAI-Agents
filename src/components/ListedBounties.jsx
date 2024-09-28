@@ -1,7 +1,9 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
+import { useReadContract } from 'wagmi'; // Make sure you import from the correct library
+import { useAccount } from 'wagmi'
 
+// The Card Component for displaying Bounties
 function CardComp({ name, contact, aiAgent, bountyPrize }) {
   return (
     <Card className="py-4 bg-gray-800 text-white border-2 border-purple-500">
@@ -17,8 +19,25 @@ function CardComp({ name, contact, aiAgent, bountyPrize }) {
 }
 
 const ListedBounties = () => {
-  const location = useLocation();
-  const { name, contact, aiAgent, bountyPrize } = location.state || {};  // Extract form data from location state
+
+  const {address} = useAccount()
+
+  // Destructure data from useReadContract
+  const { data, isLoading, isError } = useReadContract({
+    address: '0x78217d908BD4deD90CE2aE0Bf986447BDFd21B76',
+    functionName: 'getForm',
+    args: [address],
+    // ...wagmiContractConfig, 
+  });
+
+
+  // Loading and Error Handling
+  if (isLoading) return <div className="text-white">Loading bounties...</div>;
+  if (isError) return <div className="text-red-500">Error fetching bounties</div>;
+
+  // Assuming data has properties for name, contact, aiAgent, and bountyPrize
+  // const { name, contact, aiAgent, bountyPrize } = data || {};
+  
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
