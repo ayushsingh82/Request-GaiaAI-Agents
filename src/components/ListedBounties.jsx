@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
+
 import React from 'react';
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { useReadContract } from 'wagmi'; // Make sure you import from the correct library
@@ -38,7 +37,7 @@ const ListedBounties = async () => {
   // Destructure data from useReadContract
   const data = await readContract(config,{
     abi: wagmiAbi,
-    address: '0xE336a92632fA2529F1D2dC5856D0cE713d31e463',
+    address: '0x78217d908BD4deD90CE2aE0Bf986447BDFd21B76',
     functionName: 'getForm',
     args: [address],
   });
