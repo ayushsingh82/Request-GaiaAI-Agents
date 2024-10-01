@@ -1,12 +1,14 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardBody } from "@nextui-org/card";
 import { useReadContract } from 'wagmi'; // Make sure you import from the correct library
 import { useAccount } from 'wagmi'
 import { wagmiAbi } from '../abi';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { arbitrumGoerli, optimismGoerli, polygonMumbai, sepolia } from 'viem/chains';
+import { arbitrumGoerli, baseSepolia, optimismGoerli, polygonMumbai, sepolia } from 'viem/chains';
 import { readContract } from '@wagmi/core';
+import { publicClient } from '../config';
+import { colgroup } from 'framer-motion/client';
 
 // The Card Component for displaying Bounties
 function CardComp({ name, contact, aiAgent, bountyPrize }) {
@@ -23,27 +25,34 @@ function CardComp({ name, contact, aiAgent, bountyPrize }) {
   );
 }
 
-const ListedBounties = async () => {
+const ListedBounties = () => {
 
   const {address} = useAccount()
 
   const config = getDefaultConfig({
     appName: 'My RainbowKit App',
     projectId: 'e7fa7d19fd057ecd9403a0e89bd62b8b',
-    chains: [sepolia, optimismGoerli, arbitrumGoerli, polygonMumbai],
+    chains: [baseSepolia],
     ssr: false
   });
 
   // Destructure data from useReadContract
-  const data = await readContract(config,{
-    abi: wagmiAbi,
-    address: '0x78217d908BD4deD90CE2aE0Bf986447BDFd21B76',
-    functionName: 'getForm',
-    args: [address],
-  });
+  // const data = await publicClient.readContract({address: "0xB7CdDE1b9064885D32411A87b06318Bbba5b5aFA", abi: wagmiAbi, functionName: "getForm", args: [address]});
 
-  console.log(data)
+  // console.log(data)
 
+  const [data, setData] = useState();
+
+  useEffect(()=>{
+    const getData = async()=>{
+      const contractData = await publicClient.readContract({address: "0xB7CdDE1b9064885D32411A87b06318Bbba5b5aFA", abi: wagmiAbi, functionName: "getForm", args: [address]});
+      console.log(contractData)
+      setData(contractData);
+    }
+    if(!data){
+      getData()
+    }
+  },[data])
 
 
 
@@ -52,18 +61,14 @@ const ListedBounties = async () => {
   // if (isError) return <div className="text-red-500">Error fetching bounties</div>;
 
   // Assuming data has properties for name, contact, aiAgent, and bountyPrize
-  const { name, contact, aiAgent, bountyPrize } = data || {};
+  // const { name, contact, aiAgent, bountyPrize } = data || {};
   
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="flex space-x-4">
-        {name && contact && aiAgent && bountyPrize ? (
-          <CardComp name={name} contact={contact} aiAgent={aiAgent} bountyPrize={bountyPrize} />
-        ) : (
-          <p className="text-white">No bounties listed yet.</p>
-        )}
-      </div>
+      {data && 
+        <CardComp name={data[0]} contact={data[1]} aiAgent={data[2]} bountyPrize={Number(data[3])}/>
+      }
     </div>
   );
 };

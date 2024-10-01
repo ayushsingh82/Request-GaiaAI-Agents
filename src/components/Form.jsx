@@ -40,19 +40,20 @@ const Form = () => {
       const { name, contact, aiAgent, bountyPrize } = formData;
 
       // Simulate the contract call to submit the form
-
+      console.log({ name, contact, aiAgent, bountyPrize } );
 
       
       const { request } = await publicClient.simulateContract({
-        address: '0x78217d908BD4deD90CE2aE0Bf986447BDFd21B76',
+        address: '0xB7CdDE1b9064885D32411A87b06318Bbba5b5aFA',
         abi: wagmiAbi,
         functionName: 'submitForm',
-        args: [name, contact, aiAgent, bountyPrize],
+        args: [name, contact, aiAgent, Number(bountyPrize)],
         account:address
       });
 
       // Write to the contract (submit form on-chain)
-      await walletClient.writeContract(request);
+      const hash = await walletClient.writeContract(request);
+      await publicClient.waitForTransactionReceipt({hash});
 
       setSuccess('Form submitted successfully!');
     } catch (err) {
